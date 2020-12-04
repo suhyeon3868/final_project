@@ -14,12 +14,22 @@ class SelfDrive:
         right_sum = 0
         turtle_vel = Twist()
         left_angle = scan.ranges[:20]
+        right_angle = scan.ranges[340:]
 
         for i in range(len(left_angle)):
             left_sum += left_angle[i]
         average_left = left_sum / len(left_angle)
 
-        if average_left <= 0.4:
+        for i in range(len(right_angle)):
+            right_sum += right_angle[i]
+        average_right = right_sum / len(right_angle)
+
+
+        if average_right <= 0.4:
+            turtle_vel.linear.x = 0.0
+            turtle_vel.angular.z = 2.3
+            self.publisher.publish(turtle_vel)
+        elif average_left <= 0.4:
             turtle_vel.linear.x = 0.0
             turtle_vel.angular.z = -2.3
             self.publisher.publish(turtle_vel)
@@ -39,3 +49,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
